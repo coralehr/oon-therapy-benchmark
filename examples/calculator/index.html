@@ -1,0 +1,1225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Out-of-Network Therapy Reimbursement Estimator</title>
+  <meta name="description" content="Estimate what your insurance might reimburse for out-of-network therapy. Transparent, built on public CMS data. An estimate, not a guarantee." />
+
+  <!-- Fonts: Fraunces (display), Instrument Sans (UI), Source Serif 4 (clinical reading) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Instrument+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      /* Color — Clinical Atelier (see DESIGN.md) */
+      --bg: #F7F3EE;          /* warm linen */
+      --surface: #FFFCFA;     /* card stock */
+      --surface-alt: #EDE8E0; /* aged paper */
+      --ink: #1C1612;         /* warm near-black */
+      --ink-2: #2A2622;       /* body text */
+      --muted: #6B5E52;       /* walnut */
+      --line: #D8CDC2;        /* borders */
+      --coral: #FF6B5A;       /* sole accent */
+      --coral-deep: #D94F3E;  /* hover / active */
+      --coral-soft: #FF8F82;
+      --coral-tint: rgba(255, 107, 90, 0.08);
+      --success: #3E6B57;
+      --success-bg: rgba(62, 107, 87, 0.10);
+      --warning: #A56A2A;
+      --warning-bg: rgba(165, 106, 42, 0.10);
+      --error: #dc2626;
+      --error-bg: rgba(220, 38, 38, 0.10);
+
+      /* Type */
+      --font-display: "Fraunces", Georgia, serif;
+      --font-ui: "Instrument Sans", system-ui, -apple-system, sans-serif;
+      --font-serif: "Source Serif 4", Georgia, serif;
+
+      /* Shadows */
+      --shadow-sm: 0 2px 8px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06);
+      --shadow-md: 0 4px 16px rgba(0,0,0,0.06), 0 2px 4px rgba(0,0,0,0.04);
+      --shadow-lg: 0 12px 40px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.04);
+
+      /* Radii */
+      --r-sm: 4px;
+      --r-md: 8px;
+      --r-lg: 12px;
+      --r-xl: 16px;
+      --r-2xl: 18px;
+      --r-full: 9999px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { -webkit-text-size-adjust: 100%; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink-2);
+      font-family: var(--font-ui);
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    .wrap {
+      max-width: 768px;
+      margin: 0 auto;
+      padding: 48px 16px 64px;
+    }
+
+    @media (max-width: 600px) {
+      .wrap { padding: 32px 16px 48px; }
+    }
+
+    /* ---- Header ---- */
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin: 0 0 16px;
+    }
+    .eyebrow::before {
+      content: "";
+      width: 24px;
+      height: 2px;
+      background: var(--coral);
+      border-radius: var(--r-full);
+    }
+
+    h1 {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: clamp(32px, 6vw, 48px);
+      line-height: 1.05;
+      letter-spacing: -0.04em;
+      color: var(--ink);
+      margin: 0 0 16px;
+    }
+
+    .lede {
+      font-family: var(--font-serif);
+      font-size: 18px;
+      line-height: 1.6;
+      color: var(--ink-2);
+      margin: 0 0 8px;
+      max-width: 60ch;
+    }
+
+    /* ---- Card ---- */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--r-2xl);
+      box-shadow: var(--shadow-sm);
+      padding: 24px;
+    }
+
+    @media (min-width: 600px) {
+      .card { padding: 32px; }
+    }
+
+    .card + .card { margin-top: 24px; }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 20px;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      margin: 0 0 4px;
+    }
+    .section-sub {
+      font-size: 14px;
+      color: var(--muted);
+      margin: 0 0 20px;
+    }
+
+    /* ---- Form ---- */
+    .field { margin-bottom: 20px; }
+    .field:last-child { margin-bottom: 0; }
+
+    label.field-label,
+    legend.field-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+      margin-bottom: 8px;
+      padding: 0;
+    }
+
+    .field-hint {
+      font-size: 13px;
+      color: var(--muted);
+      margin: 6px 0 0;
+    }
+
+    select,
+    input[type="number"] {
+      width: 100%;
+      font-family: var(--font-ui);
+      font-size: 16px; /* >=16px prevents iOS zoom */
+      color: var(--ink);
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--r-md);
+      padding: 12px 14px;
+      line-height: 1.4;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+
+    select {
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none' stroke='%236B5E52' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'><polyline points='4 6 8 10 12 6'/></svg>");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 40px;
+    }
+
+    select:focus-visible,
+    input[type="number"]:focus-visible {
+      outline: none;
+      border-color: var(--coral);
+      box-shadow: 0 0 0 3px var(--coral-tint);
+    }
+
+    select:disabled {
+      background-color: var(--surface-alt);
+      color: var(--muted);
+      cursor: not-allowed;
+      opacity: 0.85;
+    }
+
+    input[type="number"] {
+      font-variant-numeric: tabular-nums;
+    }
+
+    .input-prefix {
+      position: relative;
+    }
+    .input-prefix > span {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      font-size: 16px;
+      pointer-events: none;
+    }
+    .input-prefix > input { padding-left: 28px; }
+
+    .input-suffix {
+      position: relative;
+    }
+    .input-suffix > span {
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      font-size: 16px;
+      pointer-events: none;
+    }
+    .input-suffix > input { padding-right: 34px; }
+
+    /* ---- Segmented (yes/no) toggle ---- */
+    .segmented {
+      display: inline-flex;
+      gap: 4px;
+      padding: 4px;
+      background: var(--surface-alt);
+      border: 1px solid var(--line);
+      border-radius: var(--r-full);
+    }
+    .segmented button {
+      font-family: var(--font-ui);
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      color: var(--ink-2);
+      background: transparent;
+      border: none;
+      border-radius: var(--r-full);
+      padding: 8px 20px;
+      min-height: 40px;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .segmented button[aria-pressed="true"] {
+      background: var(--surface);
+      color: var(--coral-deep);
+      box-shadow: var(--shadow-sm);
+    }
+    .segmented button:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 3px var(--coral-tint);
+    }
+
+    /* the deductible-remaining row, shown conditionally */
+    .conditional {
+      margin-top: 16px;
+    }
+    [hidden] { display: none !important; }
+
+    /* ---- Result panel ---- */
+    .result {
+      margin-top: 24px;
+    }
+
+    .result-card {
+      border-radius: var(--r-2xl);
+      padding: 28px 24px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+    }
+    @media (min-width: 600px) {
+      .result-card { padding: 32px; }
+    }
+
+    .result-card .result-eyebrow {
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 0 0 12px;
+    }
+
+    .result-amount {
+      font-family: var(--font-display);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+      line-height: 1.0;
+      font-size: clamp(34px, 8vw, 52px);
+      font-variant-numeric: tabular-nums;
+      margin: 0;
+    }
+    .result-amount .dash {
+      color: var(--coral);
+      font-weight: 600;
+      margin: 0 6px;
+    }
+
+    .result-context {
+      font-family: var(--font-serif);
+      font-size: 16px;
+      color: var(--ink-2);
+      margin: 14px 0 0;
+    }
+    .result-context strong { color: var(--ink); font-weight: 500; }
+
+    /* result variants */
+    .result-card.is-positive { border-color: rgba(255,107,90,0.30); background: linear-gradient(180deg, var(--surface) 0%, var(--coral-tint) 220%); }
+    .result-card.is-zero     { border-color: var(--line); background: var(--surface-alt); }
+    .result-card.is-none     { border-color: var(--line); background: var(--surface-alt); }
+
+    .result-flag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 6px 12px;
+      border-radius: var(--r-full);
+      margin-bottom: 14px;
+    }
+    .result-flag.warn { color: var(--warning); background: var(--warning-bg); }
+    .result-flag.info { color: var(--muted); background: var(--surface-alt); border: 1px solid var(--line); }
+
+    .result-status-note {
+      margin-top: 16px;
+      font-size: 13px;
+      color: var(--warning);
+      background: var(--warning-bg);
+      border-radius: var(--r-md);
+      padding: 10px 12px;
+      line-height: 1.5;
+    }
+
+    /* ---- Show your work ---- */
+    details.work {
+      margin-top: 20px;
+      border: 1px solid var(--line);
+      border-radius: var(--r-lg);
+      background: var(--surface);
+      overflow: hidden;
+    }
+    details.work > summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 16px 20px;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      color: var(--coral-deep);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      user-select: none;
+    }
+    details.work > summary::-webkit-details-marker { display: none; }
+    details.work > summary:focus-visible {
+      outline: none;
+      box-shadow: inset 0 0 0 2px var(--coral-tint);
+    }
+    details.work > summary .chev {
+      transition: transform 0.2s ease;
+      flex: none;
+    }
+    details.work[open] > summary .chev { transform: rotate(180deg); }
+
+    .work-body {
+      padding: 4px 20px 20px;
+      border-top: 1px solid var(--line);
+      font-family: var(--font-serif);
+      font-size: 15px;
+      color: var(--ink-2);
+      line-height: 1.65;
+    }
+    .work-body h4 {
+      font-family: var(--font-ui);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 20px 0 6px;
+    }
+    .work-body h4:first-child { margin-top: 16px; }
+    .work-body p { margin: 0 0 10px; }
+    .work-body ul { margin: 0 0 10px; padding-left: 20px; }
+    .work-body li { margin-bottom: 4px; }
+    .calc-line {
+      font-family: var(--font-ui);
+      font-variant-numeric: tabular-nums;
+      font-size: 14px;
+      background: var(--surface-alt);
+      border: 1px solid var(--line);
+      border-radius: var(--r-md);
+      padding: 12px 14px;
+      margin: 8px 0 12px;
+      color: var(--ink);
+      line-height: 1.7;
+      overflow-x: auto;
+    }
+    .calc-line .label { color: var(--muted); }
+    .calc-line .val { color: var(--ink); font-weight: 600; }
+
+    .disclaimer {
+      margin-top: 14px;
+      font-size: 13px;
+      color: var(--muted);
+      font-family: var(--font-ui);
+      line-height: 1.6;
+      padding: 12px 14px;
+      border-left: 2px solid var(--coral);
+      background: var(--coral-tint);
+      border-radius: 0 var(--r-md) var(--r-md) 0;
+    }
+
+    .source-line {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 12px;
+      font-family: var(--font-ui);
+    }
+
+    /* ---- Loading state ---- */
+    .state-block {
+      text-align: center;
+      padding: 48px 24px;
+    }
+    .spinner {
+      width: 28px;
+      height: 28px;
+      border: 3px solid var(--line);
+      border-top-color: var(--coral);
+      border-radius: var(--r-full);
+      margin: 0 auto 16px;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @media (prefers-reduced-motion: reduce) {
+      .spinner { animation: none; border-top-color: var(--coral); }
+    }
+    .state-block p { color: var(--muted); margin: 0; }
+
+    /* ---- Error / no-data state ---- */
+    .error-card {
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--warning);
+      background: var(--warning-bg);
+      border-radius: var(--r-lg);
+      padding: 20px 22px;
+    }
+    .error-card h3 {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 18px;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      margin: 0 0 8px;
+    }
+    .error-card p { font-size: 15px; color: var(--ink-2); margin: 0 0 10px; }
+    .error-card p:last-child { margin-bottom: 0; }
+    .error-card code {
+      font-family: ui-monospace, "SF Mono", Menlo, monospace;
+      font-size: 13px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--r-sm);
+      padding: 1px 6px;
+    }
+    .error-card ol { margin: 8px 0 0; padding-left: 20px; font-size: 14px; color: var(--ink-2); }
+    .error-card li { margin-bottom: 6px; }
+    .btn-primary {
+      font-family: var(--font-ui);
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      color: #fff;
+      background: var(--coral);
+      border: none;
+      border-radius: var(--r-full);
+      padding: 12px 24px;
+      min-height: 44px;
+      cursor: pointer;
+      transition: background 0.2s ease, box-shadow 0.2s ease;
+    }
+    .btn-primary:hover { background: var(--coral-deep); box-shadow: var(--shadow-sm); }
+    .btn-primary:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--coral-tint); }
+
+    /* ---- Footer ---- */
+    footer {
+      margin-top: 40px;
+      padding-top: 24px;
+      border-top: 1px solid var(--line);
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+    footer a { color: var(--coral-deep); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+    footer p { margin: 0 0 8px; }
+
+    .sr-only {
+      position: absolute;
+      width: 1px; height: 1px;
+      padding: 0; margin: -1px;
+      overflow: hidden;
+      clip: rect(0,0,0,0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .meta-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--muted);
+      background: var(--surface-alt);
+      border: 1px solid var(--line);
+      border-radius: var(--r-full);
+      padding: 4px 12px;
+      margin-top: 16px;
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap" id="app">
+    <header>
+      <p class="eyebrow">Out-of-network estimator</p>
+      <h1>What might my insurance reimburse for therapy?</h1>
+      <p class="lede">
+        If you see a therapist who isn&rsquo;t in your insurance network, your plan may
+        pay you back for part of the cost. This tool gives you a transparent,
+        ballpark range &mdash; built entirely from public CMS data, with every number
+        shown. It is an estimate, not a guarantee.
+      </p>
+      <span class="meta-badge" id="meta-badge" hidden></span>
+    </header>
+
+    <!-- Loading state -->
+    <div class="card" id="loading-state" aria-live="polite">
+      <div class="state-block">
+        <div class="spinner" role="status" aria-label="Loading benchmark data"></div>
+        <p>Loading the latest benchmark data&hellip;</p>
+      </div>
+    </div>
+
+    <!-- No-data / error state (fetch failed) -->
+    <div class="card" id="nodata-state" hidden>
+      <div class="error-card" role="alert">
+        <h3>We couldn&rsquo;t load the benchmark data</h3>
+        <p>
+          The calculator needs its data file (<code>therapy_oon_benchmark_v0.json</code>),
+          and it didn&rsquo;t load. This usually happens when the page is opened directly
+          from disk (browsers block local file reads) rather than served over HTTP.
+        </p>
+        <p><strong>To fix it, serve the folder over a local web server:</strong></p>
+        <ol>
+          <li>Open a terminal in the project root.</li>
+          <li>Run <code>python3 -m http.server 8000</code></li>
+          <li>Visit <code>http://localhost:8000/examples/calculator/</code></li>
+        </ol>
+        <p style="margin-top:12px;">
+          <strong>Prefer to check by hand?</strong> Look up the Medicare non-facility
+          allowed amount for your CPT code and locality in
+          <code>data/therapy_oon_benchmark_v0_by_locality.csv</code>, then multiply by
+          your plan&rsquo;s coinsurance percentage. The out-of-network band in v0 is
+          Medicare &times; 1&ndash;2 (a documented placeholder).
+        </p>
+        <p style="margin-top:12px;">
+          <button type="button" id="retry-btn" class="btn-primary">Try loading again</button>
+        </p>
+      </div>
+    </div>
+
+    <!-- Calculator (revealed once data loads) -->
+    <div id="calc-state" hidden>
+      <section class="card" aria-labelledby="form-heading">
+        <h2 class="section-title" id="form-heading">Tell us about your visit &amp; plan</h2>
+        <p class="section-sub">Nothing you enter is sent anywhere. It all stays in your browser.</p>
+
+        <form id="calc-form" novalidate>
+          <!-- 1. Session type -->
+          <div class="field">
+            <label class="field-label" for="code-select">Type of session</label>
+            <select id="code-select" name="code" aria-describedby="code-hint">
+              <option value="" disabled selected>Choose a session type&hellip;</option>
+            </select>
+            <p class="field-hint" id="code-hint">The kind of appointment your therapist billed.</p>
+          </div>
+
+          <!-- 2a. State -->
+          <div class="field">
+            <label class="field-label" for="state-select">State</label>
+            <select id="state-select" name="state" aria-describedby="state-hint">
+              <option value="" disabled selected>Choose your state&hellip;</option>
+            </select>
+            <p class="field-hint" id="state-hint">Reimbursement rates vary by region.</p>
+          </div>
+
+          <!-- 2b. Locality -->
+          <div class="field">
+            <label class="field-label" for="locality-select">Area within your state</label>
+            <select id="locality-select" name="locality" aria-describedby="locality-hint" disabled>
+              <option value="" disabled selected>Choose your state first&hellip;</option>
+            </select>
+            <p class="field-hint" id="locality-hint">CMS payment localities &mdash; pick the one nearest you.</p>
+          </div>
+
+          <!-- 3. OON benefits yes/no -->
+          <fieldset class="field" style="border:0;padding:0;margin:0 0 20px;">
+            <legend class="field-label">Do you have out-of-network benefits?</legend>
+            <div class="segmented" role="group" aria-label="Out-of-network benefits">
+              <button type="button" data-group="oon" data-value="yes" aria-pressed="true">Yes</button>
+              <button type="button" data-group="oon" data-value="no" aria-pressed="false">No</button>
+            </div>
+            <p class="field-hint">
+              Many PPO plans do; most HMO/EPO plans don&rsquo;t. Check your plan documents or call
+              the number on your card if you&rsquo;re unsure.
+            </p>
+          </fieldset>
+
+          <!-- 4. Coinsurance % -->
+          <div class="field">
+            <label class="field-label" for="coins-input">Coinsurance: what % does your plan pay?</label>
+            <div class="input-suffix">
+              <input type="number" id="coins-input" name="coinsurance" min="0" max="100" step="1"
+                     value="70" inputmode="numeric" aria-describedby="coins-hint" />
+              <span aria-hidden="true">%</span>
+            </div>
+            <p class="field-hint" id="coins-hint">
+              Out-of-network plans commonly reimburse 50&ndash;80% of an allowed amount once your
+              deductible is met. Default is 70%.
+            </p>
+          </div>
+
+          <!-- 5. Deductible met? -->
+          <fieldset class="field" style="border:0;padding:0;margin:0;">
+            <legend class="field-label">Have you met your out-of-network deductible?</legend>
+            <div class="segmented" role="group" aria-label="Deductible met">
+              <button type="button" data-group="deductible" data-value="yes" aria-pressed="true">Yes</button>
+              <button type="button" data-group="deductible" data-value="no" aria-pressed="false">Not yet</button>
+            </div>
+
+            <div class="conditional" id="deductible-remaining-row" hidden>
+              <label class="field-label" for="deductible-input" style="margin-top:8px;">
+                Roughly how much deductible is left?
+              </label>
+              <div class="input-prefix">
+                <span aria-hidden="true">$</span>
+                <input type="number" id="deductible-input" name="deductibleRemaining" min="0" step="50"
+                       value="0" inputmode="numeric" aria-describedby="deductible-hint" />
+              </div>
+              <p class="field-hint" id="deductible-hint">
+                Until the deductible is met, most plans reimburse $0 of out-of-network costs.
+              </p>
+            </div>
+          </fieldset>
+        </form>
+      </section>
+
+      <!-- Result -->
+      <section class="result" id="result-region" aria-live="polite" aria-atomic="true">
+        <!-- populated by JS -->
+      </section>
+    </div>
+
+    <footer>
+      <p>
+        <strong>Estimate only, not a guarantee.</strong> Actual reimbursement depends on
+        your specific plan, your provider&rsquo;s billed amount, your plan&rsquo;s allowed amount,
+        and how your claim is processed. This is not medical, billing, or legal advice.
+      </p>
+      <p id="footer-source">
+        Built on public CMS Physician Fee Schedule data.
+      </p>
+      <p>
+        CPT&reg; is a registered trademark of the American Medical Association. This tool
+        ships code numbers and our own plain-language labels, not AMA descriptor text.
+      </p>
+    </footer>
+  </main>
+
+  <script>
+  (function () {
+    "use strict";
+
+    var DATA_URL = "../../data/therapy_oon_benchmark_v0.json";
+
+    // ---- DOM refs ----
+    var els = {
+      loading: document.getElementById("loading-state"),
+      nodata: document.getElementById("nodata-state"),
+      calc: document.getElementById("calc-state"),
+      retry: document.getElementById("retry-btn"),
+      metaBadge: document.getElementById("meta-badge"),
+      footerSource: document.getElementById("footer-source"),
+      form: document.getElementById("calc-form"),
+      code: document.getElementById("code-select"),
+      state: document.getElementById("state-select"),
+      locality: document.getElementById("locality-select"),
+      coins: document.getElementById("coins-input"),
+      deductibleRow: document.getElementById("deductible-remaining-row"),
+      deductible: document.getElementById("deductible-input"),
+      result: document.getElementById("result-region")
+    };
+
+    // ---- App state ----
+    var DATA = null;          // full JSON
+    var META = null;          // meta block
+    var CODE_INDEX = {};      // cpt_code -> code object
+    var STATE_NAMES = {       // 2-letter -> friendly label for the dropdown
+      AL:"Alabama", AK:"Alaska", AZ:"Arizona", AR:"Arkansas", CA:"California",
+      CO:"Colorado", CT:"Connecticut", DE:"Delaware", DC:"District of Columbia",
+      FL:"Florida", GA:"Georgia", HI:"Hawaii", ID:"Idaho", IL:"Illinois",
+      IN:"Indiana", IA:"Iowa", KS:"Kansas", KY:"Kentucky", LA:"Louisiana",
+      ME:"Maine", MD:"Maryland", MA:"Massachusetts", MI:"Michigan", MN:"Minnesota",
+      MS:"Mississippi", MO:"Missouri", MT:"Montana", NE:"Nebraska", NV:"Nevada",
+      NH:"New Hampshire", NJ:"New Jersey", NM:"New Mexico", NY:"New York",
+      NC:"North Carolina", ND:"North Dakota", OH:"Ohio", OK:"Oklahoma", OR:"Oregon",
+      PA:"Pennsylvania", RI:"Rhode Island", SC:"South Carolina", SD:"South Dakota",
+      TN:"Tennessee", TX:"Texas", UT:"Utah", VT:"Vermont", VA:"Virginia",
+      WA:"Washington", WV:"West Virginia", WI:"Wisconsin", WY:"Wyoming",
+      PR:"Puerto Rico", VI:"Virgin Islands", GU:"Guam"
+    };
+
+    var selection = {
+      oonBenefits: "yes",     // "yes" | "no"
+      deductibleMet: "yes"    // "yes" | "no"
+    };
+
+    // ---- Helpers ----
+    function fmtUSD(n) {
+      if (n == null || isNaN(n)) return "$0";
+      return "$" + Math.round(n).toLocaleString("en-US");
+    }
+    function fmtUSDcents(n) {
+      if (n == null || isNaN(n)) return "$0.00";
+      return "$" + Number(n).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+    function titleCaseLocality(name) {
+      // Locality names arrive UPPERCASE from CMS; present them more gently.
+      if (!name) return "";
+      return name.replace(/\b([A-Z])([A-Z0-9'./-]*)\b/g, function (_, a, b) {
+        return a + b.toLowerCase();
+      }).replace(/\bCnty\b/g, "County");
+    }
+    function esc(s) {
+      return String(s).replace(/[&<>"']/g, function (c) {
+        return { "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c];
+      });
+    }
+
+    // ---- Loading / error visibility ----
+    function showLoading() {
+      els.loading.hidden = false;
+      els.nodata.hidden = true;
+      els.calc.hidden = true;
+    }
+    function showNoData() {
+      els.loading.hidden = true;
+      els.nodata.hidden = false;
+      els.calc.hidden = true;
+    }
+    function showCalc() {
+      els.loading.hidden = true;
+      els.nodata.hidden = true;
+      els.calc.hidden = false;
+    }
+
+    // ---- Data load ----
+    function load() {
+      showLoading();
+      fetch(DATA_URL, { cache: "no-cache" })
+        .then(function (res) {
+          if (!res.ok) throw new Error("HTTP " + res.status);
+          return res.json();
+        })
+        .then(function (json) {
+          if (!json || !Array.isArray(json.codes) || !json.codes.length) {
+            throw new Error("Malformed or empty dataset");
+          }
+          DATA = json;
+          META = json.meta || {};
+          buildIndexes();
+          populateCodes();
+          populateStates();
+          renderMetaBadge();
+          showCalc();
+          render(); // initial result (prompts for inputs)
+        })
+        .catch(function (err) {
+          // eslint-disable-next-line no-console
+          console.warn("Benchmark data failed to load:", err);
+          showNoData();
+        });
+    }
+
+    function buildIndexes() {
+      CODE_INDEX = {};
+      DATA.codes.forEach(function (c) { CODE_INDEX[c.cpt_code] = c; });
+    }
+
+    function renderMetaBadge() {
+      var v = META.methodology_version || "v0";
+      var d = META.snapshot_date || "";
+      els.metaBadge.textContent = "Dataset " + v + (d ? " · snapshot " + d : "");
+      els.metaBadge.hidden = false;
+
+      var srcs = (META.sources || []).join("; ");
+      if (srcs) {
+        els.footerSource.textContent = "Built on public CMS data: " + srcs + ".";
+      }
+    }
+
+    // ---- Populate dropdowns ----
+    function populateCodes() {
+      DATA.codes.forEach(function (c) {
+        var opt = document.createElement("option");
+        opt.value = c.cpt_code;
+        opt.textContent = c.service_label + " — " + c.cpt_code;
+        els.code.appendChild(opt);
+      });
+    }
+
+    function statesPresent() {
+      // Union of states across all codes (localities should match across codes).
+      var seen = {};
+      var first = DATA.codes[0];
+      (first.localities || []).forEach(function (loc) { seen[loc.state] = true; });
+      // Be defensive: union across all codes in case of gaps.
+      DATA.codes.forEach(function (c) {
+        (c.localities || []).forEach(function (loc) { seen[loc.state] = true; });
+      });
+      return Object.keys(seen);
+    }
+
+    function populateStates() {
+      var states = statesPresent().sort(function (a, b) {
+        var na = STATE_NAMES[a] || a, nb = STATE_NAMES[b] || b;
+        return na.localeCompare(nb);
+      });
+      states.forEach(function (st) {
+        var opt = document.createElement("option");
+        opt.value = st;
+        opt.textContent = (STATE_NAMES[st] || st) + " (" + st + ")";
+        els.state.appendChild(opt);
+      });
+    }
+
+    // Localities for a given state come from the currently-selected code (any code
+    // shares the same locality list; we use the selected one, else the first).
+    function localitiesForState(state) {
+      var codeObj = CODE_INDEX[els.code.value] || DATA.codes[0];
+      var out = [];
+      (codeObj.localities || []).forEach(function (loc, i) {
+        if (loc.state === state) out.push({ idx: i, loc: loc });
+      });
+      // Preserve file order, but de-noise visually by name.
+      return out;
+    }
+
+    function populateLocalities(state) {
+      // Reset
+      els.locality.innerHTML = "";
+      var placeholder = document.createElement("option");
+      placeholder.value = "";
+      placeholder.disabled = true;
+      placeholder.selected = true;
+
+      if (!state) {
+        placeholder.textContent = "Choose your state first…";
+        els.locality.appendChild(placeholder);
+        els.locality.disabled = true;
+        return;
+      }
+
+      var list = localitiesForState(state);
+      els.locality.disabled = false;
+
+      if (list.length === 1) {
+        // Single statewide locality — preselect it, no decision to make.
+        var only = list[0];
+        var o = document.createElement("option");
+        o.value = String(only.idx);
+        o.textContent = titleCaseLocality(only.loc.locality_name);
+        o.selected = true;
+        els.locality.appendChild(o);
+        return;
+      }
+
+      placeholder.textContent = "Choose your area…";
+      els.locality.appendChild(placeholder);
+      list.forEach(function (item) {
+        var o = document.createElement("option");
+        o.value = String(item.idx);
+        o.textContent = titleCaseLocality(item.loc.locality_name);
+        els.locality.appendChild(o);
+      });
+    }
+
+    // ---- Read current locality record (uses selected code) ----
+    function currentLocalityRecord() {
+      var codeObj = CODE_INDEX[els.code.value];
+      if (!codeObj) return null;
+      var idxStr = els.locality.value;
+      if (idxStr === "" || idxStr == null) return null;
+      var idx = parseInt(idxStr, 10);
+      var loc = (codeObj.localities || [])[idx];
+      // Guard: the index must belong to the chosen state.
+      if (!loc || loc.state !== els.state.value) {
+        // Fall back: match by state + name if indices ever drift across codes.
+        return null;
+      }
+      return loc;
+    }
+
+    // ---- Clamp helpers ----
+    function readCoinsurance() {
+      var v = parseFloat(els.coins.value);
+      if (isNaN(v)) return null;
+      if (v < 0) v = 0;
+      if (v > 100) v = 100;
+      return v;
+    }
+    function readDeductibleRemaining() {
+      var v = parseFloat(els.deductible.value);
+      if (isNaN(v) || v < 0) v = 0;
+      return v;
+    }
+
+    // ---- Core render ----
+    function render() {
+      var codeObj = CODE_INDEX[els.code.value] || null;
+      var loc = currentLocalityRecord();
+
+      // Not enough input yet -> gentle prompt.
+      if (!codeObj || !loc) {
+        els.result.innerHTML = renderPrompt(codeObj, loc);
+        return;
+      }
+
+      var band = META.oon_multiplier_band || [1.0, 2.0];
+
+      // Edge state 1: no OON benefits.
+      if (selection.oonBenefits === "no") {
+        els.result.innerHTML = renderNoBenefit(codeObj, loc);
+        return;
+      }
+
+      var coins = readCoinsurance();
+      if (coins == null) {
+        els.result.innerHTML = renderPrompt(codeObj, loc, "Enter the percentage your plan pays.");
+        return;
+      }
+
+      // Edge state 2: deductible not met.
+      if (selection.deductibleMet === "no") {
+        var remaining = readDeductibleRemaining();
+        if (remaining > 0) {
+          els.result.innerHTML = renderDeductibleNotMet(codeObj, loc, coins, remaining, band);
+          return;
+        }
+        // remaining is 0 even though "not yet" — treat as effectively met for the estimate.
+      }
+
+      // Main positive case.
+      els.result.innerHTML = renderEstimate(codeObj, loc, coins, band);
+    }
+
+    // ---- Render: not-enough-input prompt ----
+    function renderPrompt(codeObj, loc, extra) {
+      var msg;
+      if (!codeObj) msg = "Pick a session type to begin.";
+      else if (!loc) msg = "Pick your state and area to see an estimate.";
+      else msg = extra || "Fill in the details above to see your estimate.";
+      return (
+        '<div class="result-card is-none">' +
+          '<p class="result-eyebrow">Your estimate</p>' +
+          '<p class="result-context" style="margin-top:4px;">' + esc(msg) + "</p>" +
+        "</div>"
+      );
+    }
+
+    // ---- Render: no OON benefit ----
+    function renderNoBenefit(codeObj, loc) {
+      return (
+        '<div class="result-card is-none">' +
+          '<span class="result-flag info">No out-of-network benefits</span>' +
+          '<p class="result-amount" style="font-size:clamp(26px,6vw,38px);">Likely $0</p>' +
+          '<p class="result-context">' +
+            "Your plan likely won&rsquo;t reimburse out-of-network care. With no out-of-network " +
+            "benefits, the full session fee is usually your responsibility. It&rsquo;s still worth " +
+            "calling your insurer to confirm &mdash; some plans make exceptions, and you can ask " +
+            "your therapist about a sliding scale or superbill." +
+          "</p>" +
+          workSection(codeObj, loc, null, null, "no-benefit") +
+        "</div>"
+      );
+    }
+
+    // ---- Render: deductible not met ----
+    function renderDeductibleNotMet(codeObj, loc, coins, remaining, band) {
+      return (
+        '<div class="result-card is-zero">' +
+          '<span class="result-flag warn">Deductible not met</span>' +
+          '<p class="result-amount" style="font-size:clamp(26px,6vw,38px);">$0 for now</p>' +
+          '<p class="result-context">' +
+            "Until you meet your out-of-network deductible, most plans reimburse " +
+            "<strong>$0</strong>. You have about <strong>" + esc(fmtUSD(remaining)) +
+            "</strong> left to meet first. After that, this visit would reimburse in the " +
+            "range below." +
+          "</p>" +
+          renderRangePreview(codeObj, loc, coins, band) +
+          workSection(codeObj, loc, coins, band, "deductible") +
+        "</div>"
+      );
+    }
+
+    // small inline "after deductible" preview range
+    function renderRangePreview(codeObj, loc, coins, band) {
+      var low = loc.oon_low_usd * (coins / 100);
+      var high = loc.oon_high_usd * (coins / 100);
+      return (
+        '<p class="result-context" style="margin-top:14px;font-size:15px;color:var(--muted);">' +
+          "Estimated reimbursement once met: <strong style=\"color:var(--ink);\">" +
+          esc(fmtUSD(low)) + " – " + esc(fmtUSD(high)) + "</strong> per visit." +
+        "</p>"
+      );
+    }
+
+    // ---- Render: positive estimate ----
+    function renderEstimate(codeObj, loc, coins, band) {
+      var low = loc.oon_low_usd * (coins / 100);
+      var high = loc.oon_high_usd * (coins / 100);
+      var status = codeObj.medicare_status;
+
+      var statusNote = "";
+      if (status && status !== "A") {
+        statusNote =
+          '<div class="result-status-note">' +
+          "Note: Medicare assigns CPT " + esc(codeObj.cpt_code) + " a restricted status (" +
+          esc(status) + "), meaning it isn&rsquo;t separately paid under the fee schedule. " +
+          "The figures here are model-computed from its published RVUs, so treat this code&rsquo;s " +
+          "estimate as especially rough." +
+          "</div>";
+      }
+
+      return (
+        '<div class="result-card is-positive">' +
+          '<p class="result-eyebrow">Estimated reimbursement per visit</p>' +
+          '<p class="result-amount">' +
+            esc(fmtUSD(low)) + '<span class="dash" aria-hidden="true">&ndash;</span>' + esc(fmtUSD(high)) +
+          "</p>" +
+          '<p class="result-context">' +
+            "For <strong>" + esc(codeObj.service_label) + "</strong> in <strong>" +
+            esc(titleCaseLocality(loc.locality_name)) + "</strong>, with your plan paying <strong>" +
+            esc(coins) + "%</strong> after the deductible. Shown as a range because the " +
+            "out-of-network multiplier is a placeholder band, not a measured rate." +
+          "</p>" +
+          statusNote +
+          workSection(codeObj, loc, coins, band, "estimate") +
+        "</div>"
+      );
+    }
+
+    // ---- "Show your work" section (always present) ----
+    function workSection(codeObj, loc, coins, band, mode) {
+      var lo = band ? band[0] : (META.oon_multiplier_band ? META.oon_multiplier_band[0] : 1.0);
+      var hi = band ? band[1] : (META.oon_multiplier_band ? META.oon_multiplier_band[1] : 2.0);
+      var med = loc.medicare_usd;
+      var oonLow = loc.oon_low_usd;
+      var oonHigh = loc.oon_high_usd;
+
+      var coinsLine = "";
+      if (coins != null) {
+        var rLow = oonLow * (coins / 100);
+        var rHigh = oonHigh * (coins / 100);
+        coinsLine =
+          '<div class="calc-line">' +
+            '<span class="label">Your reimbursement&nbsp;=&nbsp;OON allowed &times; coinsurance</span><br>' +
+            "&nbsp;&nbsp;low&nbsp;&nbsp;= " + esc(fmtUSDcents(oonLow)) + " &times; " + esc(coins) + "% = <span class=\"val\">" + esc(fmtUSDcents(rLow)) + "</span><br>" +
+            "&nbsp;&nbsp;high = " + esc(fmtUSDcents(oonHigh)) + " &times; " + esc(coins) + "% = <span class=\"val\">" + esc(fmtUSDcents(rHigh)) + "</span>" +
+          "</div>";
+      }
+
+      var sources = (META.sources || []).map(esc).join("; ");
+      var snapshot = META.snapshot_date ? esc(META.snapshot_date) : "n/a";
+      var version = META.methodology_version ? esc(META.methodology_version) : "v0";
+      var disclaimer = META.disclaimer ||
+        "Estimate only, not a guarantee. The out-of-network range is Medicare multiplied by a placeholder band.";
+
+      return (
+        '<details class="work">' +
+          '<summary>' +
+            "Show your work" +
+            '<svg class="chev" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 6 8 10 12 6"/></svg>' +
+          "</summary>" +
+          '<div class="work-body">' +
+
+            "<h4>1. Medicare anchor (the starting number)</h4>" +
+            "<p>We start from the Medicare Physician Fee Schedule <em>non-facility</em> (office) " +
+            "allowed amount &mdash; what an outpatient therapist bills against &mdash; for your " +
+            "code and locality:</p>" +
+            '<div class="calc-line">' +
+              '<span class="label">Medicare allowed (' + esc(codeObj.cpt_code) + ", " +
+              esc(titleCaseLocality(loc.locality_name)) + ")</span><br>" +
+              '&nbsp;&nbsp;= <span class="val">' + esc(fmtUSDcents(med)) + "</span>" +
+            "</div>" +
+
+            "<h4>2. Out-of-network band (a documented placeholder)</h4>" +
+            "<p>v0 estimates the out-of-network <em>allowed amount</em> as Medicare &times; a " +
+            "placeholder multiplier band of <strong>" + esc(lo) + "&ndash;" + esc(hi) +
+            "</strong>. This band is an assumption, not a measurement &mdash; v1 replaces it with " +
+            "real Transparency-in-Coverage data.</p>" +
+            '<div class="calc-line">' +
+              "&nbsp;&nbsp;low&nbsp;&nbsp;= " + esc(fmtUSDcents(med)) + " &times; " + esc(lo) + " = <span class=\"val\">" + esc(fmtUSDcents(oonLow)) + "</span><br>" +
+              "&nbsp;&nbsp;high = " + esc(fmtUSDcents(med)) + " &times; " + esc(hi) + " = <span class=\"val\">" + esc(fmtUSDcents(oonHigh)) + "</span>" +
+            "</div>" +
+
+            (coinsLine ? "<h4>3. Your share (coinsurance)</h4>" +
+              "<p>Out-of-network plans reimburse a percentage of the allowed amount once your " +
+              "deductible is met. We multiply the band by the percentage you entered:</p>" +
+              coinsLine : "") +
+
+            "<h4>Source &amp; snapshot</h4>" +
+            "<ul>" +
+              "<li>Data: " + sources + "</li>" +
+              "<li>Snapshot date: " + snapshot + "</li>" +
+              "<li>Methodology version: " + version + "</li>" +
+              "<li>Conversion factor: " + esc(META.conversion_factor != null ? META.conversion_factor : "33.4009") + "</li>" +
+            "</ul>" +
+
+            '<div class="disclaimer">' + esc(disclaimer) + "</div>" +
+            '<p class="source-line">Underlying CMS RVU/GPCI values are U.S. Government works (public domain). ' +
+            "CPT&reg; is a registered trademark of the American Medical Association.</p>" +
+          "</div>" +
+        "</details>"
+      );
+    }
+
+    // ---- Wire up events ----
+    function bindEvents() {
+      els.retry.addEventListener("click", load);
+
+      els.code.addEventListener("change", function () {
+        // Repopulate localities for the current state (locality lists are shared,
+        // but rebuilding keeps indices aligned to the selected code).
+        var st = els.state.value;
+        if (st) {
+          var prev = els.locality.value;
+          populateLocalities(st);
+          // try to keep prior locality selection
+          if (prev) {
+            var opt = els.locality.querySelector('option[value="' + prev + '"]');
+            if (opt) els.locality.value = prev;
+          }
+        }
+        render();
+      });
+
+      els.state.addEventListener("change", function () {
+        populateLocalities(els.state.value);
+        render();
+      });
+
+      els.locality.addEventListener("change", render);
+      els.coins.addEventListener("input", render);
+      els.deductible.addEventListener("input", render);
+
+      // Segmented toggles
+      document.querySelectorAll(".segmented button").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          var group = btn.getAttribute("data-group");
+          var value = btn.getAttribute("data-value");
+          // update pressed state within the group
+          document.querySelectorAll('.segmented button[data-group="' + group + '"]').forEach(function (b) {
+            b.setAttribute("aria-pressed", b === btn ? "true" : "false");
+          });
+          if (group === "oon") selection.oonBenefits = value;
+          if (group === "deductible") {
+            selection.deductibleMet = value;
+            els.deductibleRow.hidden = (value !== "no");
+          }
+          render();
+        });
+
+        // keyboard: allow arrow-key movement within a segmented group
+        btn.addEventListener("keydown", function (e) {
+          if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
+          var group = btn.getAttribute("data-group");
+          var sibs = Array.prototype.slice.call(
+            document.querySelectorAll('.segmented button[data-group="' + group + '"]')
+          );
+          var i = sibs.indexOf(btn);
+          var next = e.key === "ArrowRight" ? sibs[i + 1] : sibs[i - 1];
+          if (next) { next.focus(); next.click(); e.preventDefault(); }
+        });
+      });
+    }
+
+    // ---- Init ----
+    bindEvents();
+    load();
+  })();
+  </script>
+</body>
+</html>

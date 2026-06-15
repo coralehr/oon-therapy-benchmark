@@ -1,0 +1,205 @@
+{
+  "reporting_entity_name": "FixtureHealth (synthetic — NOT real payer data)",
+  "reporting_entity_type": "health insurance issuer",
+  "version": "1.0.0",
+  "last_updated_on": "2026-05-01",
+  "in_network": [
+    {
+      "negotiation_arrangement": "ffs",
+      "name": "Individual therapy 60 min",
+      "billing_code_type": "CPT",
+      "billing_code_type_version": "2026",
+      "billing_code": "90837",
+      "negotiated_rates": [
+        {
+          "provider_groups": [
+            {"npi": [1111111111], "tin": {"type": "ein", "value": "11-1110001"}, "state": "CA"}
+          ],
+          "negotiated_prices": [
+            {"negotiated_type": "negotiated", "negotiated_rate": 165.00, "expiration_date": "2027-12-31", "billing_class": "professional", "service_code": ["11"]}
+          ]
+        },
+        {
+          "provider_groups": [
+            {"npi": [1111111112], "tin": {"type": "ein", "value": "11-1110002"}, "state": "CA"}
+          ],
+          "negotiated_prices": [
+            {"negotiated_type": "negotiated", "negotiated_rate": 172.50, "billing_class": "professional", "service_code": ["11"]}
+          ]
+        },
+        {
+          "provider_groups": [
+            {"npi": [1111111113], "tin": {"type": "ein", "value": "11-1110003"}, "state": "CA"}
+          ],
+          "negotiated_prices": [
+            {"negotiated_type": "fee schedule", "negotiated_rate": 158.75, "billing_class": "professional", "service_code": ["11"]}
+          ]
+        },
+        {
+          "provider_groups": [
+            {"npi": [1111111114], "tin": {"type": "ein", "value": "11-1110004"}, "state": "CA"}
+          ],
+          "negotiated_prices": [
+            {"negotiated_type": "negotiated", "negotiated_rate": 169.20, "billing_class": "professional", "service_code": ["11"]}
+          ]
+        },
+        {
+          "provider_groups": [
+            {"npi": [1111111115], "tin": {"type": "ein", "value": "11-1110005"}, "state": "CA"}
+          ],
+          "negotiated_prices": [
+            {"negotiated_type": "negotiated", "negotiated_rate": 174.00, "billing_class": "professional", "service_code": ["11"]}
+          ]
+        },
+        {
+          "provider_groups": [
+            {"npi": [1111111116], "tin": {"type": "ein", "value": "11-1110006"}, "state": "CA"}
+          ],
+          "negotiated_prices": [
+            {"negotiated_type": "negotiated", "negotiated_rate": 161.40, "billing_class": "professional", "service_code": ["11"]}
+          ]
+        },
+        {
+          "provider_groups": [
+            {"npi": [1111111117], "tin": {"type": "ein", "value": "11-1110007"}, "state": "CA"}
+          ],
+          "negotiated_prices": [
+            {"negotiated_type": "negotiated", "negotiated_rate": 180.10, "billing_class": "professional", "service_code": ["11"]}
+          ]
+        },
+        {
+          "provider_groups": [
+            {"npi": [1111111118], "tin": {"type": "ein", "value": "11-1110008"}, "state": "CA"}
+          ],
+          "negotiated_prices": [
+            {"negotiated_type": "negotiated", "negotiated_rate": 167.85, "billing_class": "professional", "service_code": ["11"]}
+          ]
+        },
+        {
+          "provider_groups": [
+            {"npi": [1111111119], "tin": {"type": "ein", "value": "11-1110009"}, "state": "CA"}
+          ],
+          "negotiated_prices": [
+            {"negotiated_type": "negotiated", "negotiated_rate": 155.00, "billing_class": "professional", "service_code": ["11"]}
+          ]
+        },
+        {
+          "provider_groups": [
+            {"npi": [1111111120], "tin": {"type": "ein", "value": "11-1110010"}, "state": "CA"}
+          ],
+          "negotiated_prices": [
+            {"negotiated_type": "negotiated", "negotiated_rate": 176.30, "billing_class": "professional", "service_code": ["11"]}
+          ]
+        },
+        {
+          "provider_groups": [
+            {"npi": [1111111121], "tin": {"type": "ein", "value": "11-1110011"}, "state": "CA"}
+          ],
+          "negotiated_prices": [
+            {"negotiated_type": "negotiated", "negotiated_rate": 163.95, "billing_class": "professional", "service_code": ["11"]}
+          ]
+        },
+        {
+          "provider_groups": [
+            {"npi": [2222222201], "tin": {"type": "ein", "value": "22-2220001"}, "state": "TX"}
+          ],
+          "negotiated_prices": [
+            {"negotiated_type": "negotiated", "negotiated_rate": 148.00, "billing_class": "institutional", "service_code": ["21"]}
+          ]
+        }
+      ]
+    },
+    {
+      "negotiation_arrangement": "capitation",
+      "name": "Individual therapy 60 min (capitation arrangement — must be rejected at aggregate)",
+      "billing_code_type": "CPT",
+      "billing_code_type_version": "2026",
+      "billing_code": "90837",
+      "negotiated_rates": [
+        {
+          "provider_groups": [
+            {"npi": [1212121201], "tin": {"type": "ein", "value": "12-1210001"}, "state": "CA"}
+          ],
+          "negotiated_prices": [
+            {"negotiated_type": "negotiated", "negotiated_rate": 99.00, "billing_class": "professional", "service_code": ["11"]}
+          ]
+        }
+      ]
+    },
+    {
+      "negotiation_arrangement": "ffs",
+      "name": "Individual therapy 45 min",
+      "billing_code_type": "CPT",
+      "billing_code_type_version": "2026",
+      "billing_code": "90834",
+      "negotiated_rates": [
+        {
+          "provider_groups": [
+            {"npi": [3333333301], "tin": {"type": "ein", "value": "33-3330001"}, "state": "NY"}
+          ],
+          "negotiated_prices": [
+            {"negotiated_type": "negotiated", "negotiated_rate": 118.00, "billing_class": "professional", "service_code": ["11"]}
+          ]
+        },
+        {
+          "provider_groups": [
+            {"npi": [3333333302], "tin": {"type": "ein", "value": "33-3330002"}, "state": "NY"}
+          ],
+          "negotiated_prices": [
+            {"negotiated_type": "negotiated", "negotiated_rate": 122.50, "billing_class": "professional", "service_code": ["11"]}
+          ]
+        },
+        {
+          "provider_groups": [
+            {"npi": [3333333303], "tin": {"type": "ein", "value": "33-3330003"}, "state": "NY"}
+          ],
+          "negotiated_prices": [
+            {"negotiated_type": "negotiated", "negotiated_rate": 115.75, "billing_class": "professional", "service_code": ["11"]}
+          ]
+        },
+        {
+          "provider_groups": [
+            {"npi": [3333333304], "tin": {"type": "ein", "value": "33-3330004"}, "state": "NY"}
+          ],
+          "negotiated_prices": [
+            {"negotiated_type": "negotiated", "negotiated_rate": 120.00, "billing_class": "professional", "service_code": ["11"]}
+          ]
+        }
+      ]
+    },
+    {
+      "negotiation_arrangement": "ffs",
+      "name": "Office outpatient visit (NOT therapy — must be rejected)",
+      "billing_code_type": "CPT",
+      "billing_code_type_version": "2026",
+      "billing_code": "99213",
+      "negotiated_rates": [
+        {
+          "provider_groups": [
+            {"npi": [4444444401], "tin": {"type": "ein", "value": "44-4440001"}, "state": "CA"}
+          ],
+          "negotiated_prices": [
+            {"negotiated_type": "negotiated", "negotiated_rate": 95.00, "billing_class": "professional", "service_code": ["11"]}
+          ]
+        }
+      ]
+    },
+    {
+      "negotiation_arrangement": "ffs",
+      "name": "Lab PLA code (NOT therapy — must be rejected)",
+      "billing_code_type": "CPT",
+      "billing_code_type_version": "2026",
+      "billing_code": "0202U",
+      "negotiated_rates": [
+        {
+          "provider_groups": [
+            {"npi": [4444444402], "tin": {"type": "ein", "value": "44-4440002"}, "state": "CA"}
+          ],
+          "negotiated_prices": [
+            {"negotiated_type": "negotiated", "negotiated_rate": 500.00, "billing_class": "professional", "service_code": ["81"]}
+          ]
+        }
+      ]
+    }
+  ]
+}

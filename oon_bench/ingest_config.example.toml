@@ -1,0 +1,90 @@
+# oon_bench ingest — EXAMPLE config (copy to ingest_config.toml and fill in).
+#
+# This file drives `python -m oon_bench.ingest --config ingest_config.toml`.
+# It lists the payers to benchmark and, for each, the published Transparency-in-
+# Coverage (TiC) Table-of-Contents (TOC / index) URL that the runner discovers
+# MRF file links from.
+#
+# IMPORTANT — read before filling this in:
+#   * No real payer URLs are committed to this repo. The values below are
+#     PLACEHOLDERS. Payers rotate these paths on every publish, so you MUST get
+#     the CURRENT index URL from each payer's public "Transparency in Coverage" /
+#     "machine-readable files" page. See ../v1_tic/payer_targets.md for where
+#     each payer's page lives and the per-payer data-quality caveats.
+#   * Always start from the INDEX (Table of Contents), never a bookmarked
+#     individual file URL — the per-file URLs are generated per publish and
+#     rotate (often presigned S3 URLs with an expiring query string).
+#   * The index itself is often huge and gzipped. The runner streams it; install
+#     `ijson` (`pip install ijson`) before a real run so it parses incrementally.
+#   * Before committing to a full (hours-long, tens-of-GB) run, validate a new
+#     payer cheaply:
+#         python -m oon_bench.ingest --config ingest_config.toml --payer aetna \
+#             --dry-run --limit 20
+#     That lists the first 20 files it WOULD fetch (kind, region, location) and
+#     downloads nothing.
+#
+# Each [payers.<slug>] table accepts:
+#   index    (required)  payer TiC index URL or a LOCAL path to a saved index.
+#   regions  (optional)  list of 2-letter states to keep; files with no geo
+#                        (national OON) are ALWAYS kept regardless.
+#   kinds    (optional)  subset of ["in-network", "allowed"]; default is both.
+#                        - "allowed"    = real OON allowed amounts -> tic_oon_actual
+#                        - "in-network" = negotiated rates (a PROXY) -> tic_innetwork_proxy
+#   notes    (optional)  free-text reminder; ignored by the runner.
+
+# ---------------------------------------------------------------------------
+# 1. UnitedHealthcare / Optum
+#    Largest US commercial membership -> broadest code x region coverage and the
+#    deepest OON allowed-amount volume. Index is very large; stream it.
+#    Public page: transparency-in-coverage.uhc.com  (confirm current index URL).
+# ---------------------------------------------------------------------------
+[payers.uhc]
+index = "REPLACE_ME://uhc-tic-index-url"   # get from transparency-in-coverage.uhc.com
+kinds = ["allowed", "in-network"]
+# regions = ["CA", "TX", "NY", "FL"]       # uncomment to narrow a sampling run
+notes = """
+UHC publishes per-plan/per-EIN chunks. The index is large -> ijson required.
+Region is frequently absent on OON files; those feed the national percentile.
+Provider-reference indirection (provider_group_id -> separate file) is NOT
+joined by the scaffold; region for in-network rows comes from the filename hint
+or is national until that join is implemented (see filter_mrf.py TODOs).
+"""
+
+# ---------------------------------------------------------------------------
+# 2. Aetna (CVS Health)
+#    Closest to the CMS reference schema -> best FIRST integration test for the
+#    filter's in-network path. Files generally gzipped.
+#    Public page: Aetna TiC MRF portal (health1.aetna.com)  (confirm current URL).
+# ---------------------------------------------------------------------------
+[payers.aetna]
+index = "REPLACE_ME://aetna-tic-index-url"   # get from Aetna's TiC MRF page
+kinds = ["allowed", "in-network"]
+notes = """
+Start here. Aetna's in-network files closely follow the CMS reference schema,
+so validate filter_mrf.py end-to-end on Aetna before UHC/Cigna. Then exercise
+the OON 'allowed' path (region-absent handling) on Aetna's allowed-amount file.
+"""
+
+# ---------------------------------------------------------------------------
+# 3. Cigna
+#    Independent third data point so multi-payer percentiles aren't dominated by
+#    one payer's contracting. Often partitioned by plan/market.
+#    Public page: cigna.com transparency-in-coverage section  (confirm current URL).
+# ---------------------------------------------------------------------------
+[payers.cigna]
+index = "REPLACE_ME://cigna-tic-index-url"   # get from Cigna's TiC MRF page
+kinds = ["allowed", "in-network"]
+notes = """
+Confirm whether Cigna publishes a SEPARATE OON allowed-amount file set for the
+markets you care about before counting on tic_oon_actual here; some markets may
+only have in-network files (proxy only). See payer_targets.md caveat for Cigna.
+"""
+
+# ---------------------------------------------------------------------------
+# Local-file example (no network) — useful for testing the runner against a
+# saved index sample or a committed fixture without downloading anything.
+# Point `index` at a local .json / .json.gz Table-of-Contents file.
+# ---------------------------------------------------------------------------
+# [payers.local_sample]
+# index = "/abs/path/to/saved_toc_sample.json"
+# kinds = ["allowed"]

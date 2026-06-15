@@ -1,0 +1,20 @@
+cpt_code,service_label,medicare_status,medicare_nonfacility_usd,oon_estimate_low_usd,oon_estimate_high_usd,basis,oon_mult_low,oon_mult_high,source,snapshot_date,methodology_version
+90791,Diagnostic intake / first evaluation,A,173.35,173.35,346.7,medicare_multiple,1.0,2.0,CMS PFS RVU26A / PPRRVU2026_Jan_nonQPP.csv,2026-06-07,v0-medicare-2026A
+90792,Diagnostic intake with medical services (prescriber),A,202.08,202.08,404.16,medicare_multiple,1.0,2.0,CMS PFS RVU26A / PPRRVU2026_Jan_nonQPP.csv,2026-06-07,v0-medicare-2026A
+90832,"Individual therapy, 30 minutes",A,85.84,85.84,171.68,medicare_multiple,1.0,2.0,CMS PFS RVU26A / PPRRVU2026_Jan_nonQPP.csv,2026-06-07,v0-medicare-2026A
+90834,"Individual therapy, 45 minutes",A,113.9,113.9,227.8,medicare_multiple,1.0,2.0,CMS PFS RVU26A / PPRRVU2026_Jan_nonQPP.csv,2026-06-07,v0-medicare-2026A
+90837,"Individual therapy, 60 minutes",A,167.0,167.0,334.0,medicare_multiple,1.0,2.0,CMS PFS RVU26A / PPRRVU2026_Jan_nonQPP.csv,2026-06-07,v0-medicare-2026A
+90846,"Family therapy without the client present, 50 minutes",R,105.88,105.88,211.76,medicare_multiple,1.0,2.0,CMS PFS RVU26A / PPRRVU2026_Jan_nonQPP.csv,2026-06-07,v0-medicare-2026A
+90847,"Family therapy with the client present, 50 minutes",A,109.55,109.55,219.1,medicare_multiple,1.0,2.0,CMS PFS RVU26A / PPRRVU2026_Jan_nonQPP.csv,2026-06-07,v0-medicare-2026A
+90853,Group therapy session,A,30.39,30.39,60.78,medicare_multiple,1.0,2.0,CMS PFS RVU26A / PPRRVU2026_Jan_nonQPP.csv,2026-06-07,v0-medicare-2026A
+90839,"Crisis therapy, first 60 minutes",A,160.32,160.32,320.64,medicare_multiple,1.0,2.0,CMS PFS RVU26A / PPRRVU2026_Jan_nonQPP.csv,2026-06-07,v0-medicare-2026A
+90840,"Crisis therapy, each additional 30 minutes",A,77.16,77.16,154.32,medicare_multiple,1.0,2.0,CMS PFS RVU26A / PPRRVU2026_Jan_nonQPP.csv,2026-06-07,v0-medicare-2026A
+96127,Brief emotional/behavioral check (per standardized measure),A,5.01,5.01,10.02,medicare_multiple,1.0,2.0,CMS PFS RVU26A / PPRRVU2026_Jan_nonQPP.csv,2026-06-07,v0-medicare-2026A
+96130,"Psychological testing evaluation by clinician, first hour",A,123.92,123.92,247.84,medicare_multiple,1.0,2.0,CMS PFS RVU26A / PPRRVU2026_Jan_nonQPP.csv,2026-06-07,v0-medicare-2026A
+96131,"Psychological testing evaluation, each additional hour",A,86.51,86.51,173.02,medicare_multiple,1.0,2.0,CMS PFS RVU26A / PPRRVU2026_Jan_nonQPP.csv,2026-06-07,v0-medicare-2026A
+96132,"Neuropsychological testing evaluation by clinician, first hour",A,122.25,122.25,244.5,medicare_multiple,1.0,2.0,CMS PFS RVU26A / PPRRVU2026_Jan_nonQPP.csv,2026-06-07,v0-medicare-2026A
+96133,"Neuropsychological testing evaluation, each additional hour",A,97.86,97.86,195.72,medicare_multiple,1.0,2.0,CMS PFS RVU26A / PPRRVU2026_Jan_nonQPP.csv,2026-06-07,v0-medicare-2026A
+96136,"Test administration and scoring by clinician, first 30 minutes",A,43.76,43.76,87.52,medicare_multiple,1.0,2.0,CMS PFS RVU26A / PPRRVU2026_Jan_nonQPP.csv,2026-06-07,v0-medicare-2026A
+96137,"Test administration and scoring, each additional 30 minutes",A,37.07,37.07,74.14,medicare_multiple,1.0,2.0,CMS PFS RVU26A / PPRRVU2026_Jan_nonQPP.csv,2026-06-07,v0-medicare-2026A
+90785,Interactive complexity add-on (complicating communication factors),A,14.7,14.7,29.4,medicare_multiple,1.0,2.0,CMS PFS RVU26A / PPRRVU2026_Jan_nonQPP.csv,2026-06-07,v0-medicare-2026A
+90845,Psychoanalysis session,A,109.22,109.22,218.44,medicare_multiple,1.0,2.0,CMS PFS RVU26A / PPRRVU2026_Jan_nonQPP.csv,2026-06-07,v0-medicare-2026A

@@ -1,0 +1,72 @@
+Data License — Compiled Dataset
+===============================
+
+The compiled dataset published in this repository under `data/`:
+
+    data/therapy_oon_benchmark_v0_national.csv
+    data/therapy_oon_benchmark_v0_by_locality.csv
+    data/therapy_oon_benchmark_v0.json
+
+is licensed under the Creative Commons Attribution 4.0 International License
+(CC-BY-4.0).
+
+    Full legal text:  https://creativecommons.org/licenses/by/4.0/legalcode
+    Human-readable:   https://creativecommons.org/licenses/by/4.0/
+
+You are free to share and adapt the dataset for any purpose, including
+commercially, provided you give appropriate credit. Suggested attribution:
+
+    "Therapy Out-of-Network Reimbursement Benchmark" by Ticvision / CoralEHR,
+    licensed under CC-BY-4.0. Source: https://github.com/ticvision (this repo).
+
+
+What CC-BY-4.0 covers — and what it does not
+--------------------------------------------
+
+CC-BY-4.0 attaches to the *compilation*: the selection of CPT codes, our
+original plain-language service labels, the geographic arrangement by CMS
+locality, the schema, and the documented methodology that assembles these
+figures. It is the creative and editorial work of building the dataset that
+is licensed here.
+
+CC-BY-4.0 does NOT — and cannot — place new restrictions on the underlying
+public-domain facts. The raw CMS RVU and GPCI numeric values, the conversion
+factor, and the Medicare allowed amounts derived directly from them are facts
+drawn from U.S. Government works (see below) and remain in the public domain.
+Anyone may use those underlying numbers freely from their original public
+sources; the CC-BY-4.0 terms apply to this particular compiled, labeled, and
+arranged dataset.
+
+
+Underlying CMS data — U.S. Government works, public domain
+----------------------------------------------------------
+
+The numeric inputs are derived from the Centers for Medicare & Medicaid
+Services (CMS) Physician Fee Schedule release:
+
+    PPRRVU2026_Jan_nonQPP.csv   (work / PE / MP RVUs, status, conversion factor)
+    GPCI2026.csv                (geographic practice cost indices per locality)
+
+Works prepared by U.S. Government employees as part of their official duties
+are not subject to copyright in the United States (17 U.S.C. § 105) and are in
+the public domain. These source files are re-fetchable via `fetch_cms_data.sh`
+and are intentionally NOT committed to this repository (see `.gitignore`).
+
+
+CPT(R) caveat — American Medical Association
+--------------------------------------------
+
+CPT(R) (Current Procedural Terminology) is a registered trademark of the
+American Medical Association (AMA), and the CPT code descriptors are
+copyright (C) the AMA.
+
+This repository ships only:
+  - the five-digit CPT code NUMBERS (e.g. 90837), which are short factual
+    identifiers used to reference a service, and
+  - our OWN original plain-language service labels (see `therapy_codes.py`),
+    which are NOT the AMA's official CPT descriptors.
+
+This repository does NOT redistribute AMA CPT descriptor text. If you intend
+to publish official CPT descriptors at scale, you must license CPT from the
+AMA. The CC-BY-4.0 grant above applies to our compilation and our labels — it
+confers no rights in the AMA's CPT descriptors or trademark.

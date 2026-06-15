@@ -1,0 +1,9 @@
+# Dev / CI dependencies for the OON therapy benchmark.
+# The pipeline itself (build_baseline.py) is stdlib-only; these are only needed
+# to run the test suite and lint.
+#
+#   python -m pip install -r requirements-dev.txt
+#   pytest
+#   ruff check .
+pytest>=8.0
+ruff>=0.6

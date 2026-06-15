@@ -1,0 +1,54 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "oon-bench"
+version = "0.1.0"
+description = "Open-source backend for therapy out-of-network reimbursement benchmarks: CMS Medicare anchor (v0) + Transparency-in-Coverage enrichment (v1)."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Ticvision / CoralEHR" }]
+keywords = [
+    "healthcare",
+    "transparency-in-coverage",
+    "cms",
+    "medicare",
+    "reimbursement",
+    "out-of-network",
+    "therapy",
+    "cpt",
+]
+# Core data stages are standard-library only.
+dependencies = []
+
+[project.optional-dependencies]
+# The HTTP API surface. starlette is constrained because FastAPI couples to it.
+api = [
+    "fastapi>=0.110,<1.0",
+    "uvicorn[standard]>=0.29",
+    "starlette>=0.37,<0.48",
+    "httpx>=0.27",
+]
+dev = ["pytest>=8.0", "ruff>=0.6"]
+
+[project.scripts]
+oon-bench = "oon_bench.cli:main"
+
+[tool.setuptools]
+# therapy_codes.py is a top-level module the package imports; ship it alongside.
+py-modules = ["therapy_codes"]
+
+[tool.setuptools.packages.find]
+include = ["oon_bench*"]
+
+[tool.setuptools.package-data]
+oon_bench = ["fixtures/*.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 100

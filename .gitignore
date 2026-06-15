@@ -1,0 +1,18 @@
+# Public-domain CMS source files — re-fetchable via ./fetch_cms_data.sh, not committed.
+data/raw/
+
+# Compiled dataset outputs ARE committed (they are the deliverable):
+#   data/therapy_oon_benchmark_v0_national.csv
+#   data/therapy_oon_benchmark_v0_by_locality.csv
+#   data/therapy_oon_benchmark_v0.json
+
+# run_local.py smoke-test output — regenerated on demand from the fixtures,
+# not a published deliverable. The real merged v1 dataset (data/v1/) IS committed
+# (like the v0 outputs above), once a real TiC build has produced it.
+data/v1_sample/
+
+__pycache__/
+*.pyc
+.DS_Store
+.ruff_cache/
+.pytest_cache/

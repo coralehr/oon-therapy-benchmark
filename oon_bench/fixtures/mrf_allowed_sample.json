@@ -1,0 +1,112 @@
+{
+  "reporting_entity_name": "FixtureHealth (synthetic — NOT real payer data)",
+  "reporting_entity_type": "health insurance issuer",
+  "version": "1.0.0",
+  "last_updated_on": "2026-05-01",
+  "out_of_network": [
+    {
+      "name": "Neuropsychological testing eval first hour",
+      "billing_code_type": "CPT",
+      "billing_code_type_version": "2026",
+      "billing_code": "96132",
+      "allowed_amounts": [
+        {
+          "tin": {"type": "ein", "value": "55-5550001"},
+          "service_code": ["11"],
+          "billing_class": "professional",
+          "payments": [
+            {"allowed_amount": 210.00, "providers": [{"npi": [5111111101], "billed_charge_frequency": 7}], "state": "CA"},
+            {"allowed_amount": 198.50, "providers": [{"npi": [5111111102], "billed_charge_frequency": 4}], "state": "CA"},
+            {"allowed_amount": 225.75, "providers": [{"npi": [5111111103], "billed_charge_frequency": 9}], "state": "CA"}
+          ]
+        },
+        {
+          "tin": {"type": "ein", "value": "55-5550002"},
+          "service_code": ["11"],
+          "billing_class": "professional",
+          "payments": [
+            {"allowed_amount": 188.00, "providers": [{"npi": [5111111104]}], "state": "CA"},
+            {"allowed_amount": 240.10, "providers": [{"npi": [5111111105]}], "state": "CA"},
+            {"allowed_amount": 205.30, "providers": [{"npi": [5111111106]}], "state": "CA"},
+            {"allowed_amount": 215.00, "providers": [{"npi": [5111111107]}], "state": "CA"}
+          ]
+        },
+        {
+          "tin": {"type": "ein", "value": "55-5550003"},
+          "service_code": ["11"],
+          "billing_class": "professional",
+          "payments": [
+            {"allowed_amount": 192.40, "providers": [{"npi": [5111111108]}], "state": "CA"},
+            {"allowed_amount": 230.00, "providers": [{"npi": [5111111109]}], "state": "CA"},
+            {"allowed_amount": 201.15, "providers": [{"npi": [5111111110]}], "state": "CA"},
+            {"allowed_amount": 218.60, "providers": [{"npi": [5111111111]}], "state": "CA"},
+            {"allowed_amount": 207.95, "providers": [{"npi": [5111111112]}], "state": "CA"}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Diagnostic intake / first evaluation",
+      "billing_code_type": "CPT",
+      "billing_code_type_version": "2026",
+      "billing_code": "90791",
+      "allowed_amounts": [
+        {
+          "tin": {"type": "ein", "value": "66-6660001"},
+          "service_code": ["11"],
+          "billing_class": "professional",
+          "payments": [
+            {"allowed_amount": 245.00, "providers": [{"npi": [6111111101]}]},
+            {"allowed_amount": 268.50, "providers": [{"npi": [6111111102]}]},
+            {"allowed_amount": 230.75, "providers": [{"npi": [6111111103]}]},
+            {"allowed_amount": 255.20, "providers": [{"npi": [6111111104]}]},
+            {"allowed_amount": 240.00, "providers": [{"npi": [6111111105]}]},
+            {"allowed_amount": 275.90, "providers": [{"npi": [6111111106]}]},
+            {"allowed_amount": 259.40, "providers": [{"npi": [6111111107]}]},
+            {"allowed_amount": 233.10, "providers": [{"npi": [6111111108]}]},
+            {"allowed_amount": 248.65, "providers": [{"npi": [6111111109]}]},
+            {"allowed_amount": 262.00, "providers": [{"npi": [6111111110]}]},
+            {"allowed_amount": 251.30, "providers": [{"npi": [6111111111]}]},
+            {"allowed_amount": 0.00, "providers": [{"npi": [6111110000]}]},
+            {"allowed_amount": -42.00, "providers": [{"npi": [6111110001]}]}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Individual therapy 45 min (NY — too few OON obs, should NOT clear MIN_N)",
+      "billing_code_type": "CPT",
+      "billing_code_type_version": "2026",
+      "billing_code": "90834",
+      "allowed_amounts": [
+        {
+          "tin": {"type": "ein", "value": "77-7770001"},
+          "service_code": ["11"],
+          "billing_class": "professional",
+          "payments": [
+            {"allowed_amount": 130.00, "providers": [{"npi": [7111111101]}], "state": "NY"},
+            {"allowed_amount": 142.50, "providers": [{"npi": [7111111102]}], "state": "NY"},
+            {"allowed_amount": 125.75, "providers": [{"npi": [7111111103]}], "state": "NY"}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Office outpatient visit (NOT therapy — must be rejected)",
+      "billing_code_type": "CPT",
+      "billing_code_type_version": "2026",
+      "billing_code": "99213",
+      "allowed_amounts": [
+        {
+          "tin": {"type": "ein", "value": "88-8880001"},
+          "service_code": ["11"],
+          "billing_class": "professional",
+          "payments": [
+            {"allowed_amount": 110.00, "providers": [{"npi": [8111111101]}], "state": "CA"},
+            {"allowed_amount": 118.40, "providers": [{"npi": [8111111102]}], "state": "CA"}
+          ]
+        }
+      ]
+    }
+  ]
+}

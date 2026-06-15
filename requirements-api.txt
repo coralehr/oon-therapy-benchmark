@@ -1,0 +1,6 @@
+# HTTP API surface (the open-source backend). Core data stages need none of this.
+# starlette is constrained because FastAPI couples tightly to it.
+fastapi>=0.110,<1.0
+uvicorn[standard]>=0.29
+starlette>=0.37,<0.48
+httpx>=0.27

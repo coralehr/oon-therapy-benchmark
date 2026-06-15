@@ -1,0 +1,38 @@
+name: CI
+
+# Runs on every push + pull request so contributor diffs are actually tested.
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dev tooling
+        run: python -m pip install --upgrade pip pytest ruff
+
+      - name: Lint
+        run: ruff check .
+
+      # Best-effort: when cms.gov is reachable the raw files are present and the
+      # parser/golden tests run; if the fetch fails (CMS downtime/blocked) those
+      # tests skip cleanly and CI stays green on the committed-output tests.
+      - name: Fetch public CMS source data (best effort)
+        continue-on-error: true
+        run: ./fetch_cms_data.sh
+
+      - name: Tests
+        run: python3 -m pytest -q
