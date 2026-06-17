@@ -106,11 +106,21 @@ remaining operational step.
   out-of-network *allowed-amount* files are effectively empty (UHC largest 17 KB), so
   in-network negotiated rates are the proxy.
 
+### Per-locality estimates (geo-blend)
+
+- **`oon_bench/blend.py`**: every CMS locality now carries a real-data-informed
+  estimate via `geo_method=medicare_gpci_blend` — the measured national
+  in-network/Medicare ratio per code, scaled by each locality's Medicare GPCI.
+  90837 median now runs AL $133 / CA $142 / NY $150 / US $137 instead of a flat
+  national number. Chosen over provider-reference->NPI->state (NPPES) resolution
+  because in-network rates are negotiated at the multi-state provider-group/TIN level,
+  so per-state attribution from the MRF is inherently fuzzy and would need tens of
+  thousands of NPI lookups. The rate signal is real; the geography is Medicare's.
+
 ### Planned
 
-- **Per-state resolution:** provider-reference -> NPI -> state (NPPES) so by-locality
-  rows carry real proxy numbers instead of national-only. This is the next real lever
-  (and what makes a full-scale fire-and-forget run worthwhile).
-- Broaden beyond a 40-plan UHC sample (more plans, more payers); Aetna index is
-  SPA-gated and needs browser-based discovery.
+- Broaden beyond a 40-plan UHC sample (more plans, more payers) to tighten the
+  national ratio the localities inherit; Aetna index is SPA-gated (needs browser
+  discovery). A full-scale run is where a fire-and-forget batch box earns its keep.
+- True per-state measured rates (NPPES) only if the geo-blend proves insufficient.
 - ZIP→locality mapping via CMS `26LOCCO`.
