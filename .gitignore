@@ -11,6 +11,9 @@ data/raw/
 # (like the v0 outputs above), once a real TiC build has produced it.
 data/v1_sample/
 
+# Transient build progress log from oon_bench/build_real.py.
+data/v1/BUILD_LOG.txt
+
 __pycache__/
 *.pyc
 .DS_Store
