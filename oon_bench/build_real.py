@@ -62,12 +62,16 @@ def _head_size(url: str, timeout: int = 20) -> int:
         return -1
 
 
-def _pick_smallest(urls: list, n: int, cap: int, head_budget: int = 140) -> list:
-    """HEAD up to head_budget candidates, keep those <= cap bytes, return n smallest."""
+def _pick_smallest(urls: list, n: int, cap: int, head_budget: int = 140, lo: int = 0) -> list:
+    """HEAD up to head_budget candidates, keep those in (lo, cap] bytes, return n smallest.
+
+    `lo` excludes near-empty shards (e.g. Anthem shards a plan across many files; the
+    smallest shards carry only a handful of codes and no therapy, so we floor the size).
+    """
     sized = []
     for u in urls[:head_budget]:
         s = _head_size(u)
-        if 0 < s <= cap:
+        if lo < s <= cap:
             sized.append((s, u))
     sized.sort()
     return [u for _, u in sized[:n]]
@@ -189,14 +193,56 @@ def discover_cigna(n: int) -> list:
     return _pick_smallest(locs, n, cap=150_000_000, head_budget=120)
 
 
-PAYERS = {"uhc": discover_uhc, "centene": discover_centene, "cigna": discover_cigna}
+# --------------------------------------------------------------------------- #
+# Anthem / Elevance (~10GB gzip S3 index -> signed BCBS CDN file URLs, sharded)
+# --------------------------------------------------------------------------- #
+ANTHEM_INDEX_FMT = ("https://antm-pt-prod-dataz-nogbd-nophi-us-east1.s3.amazonaws.com/"
+                    "anthem/{stamp}_anthem_index.json.gz")
+
+
+def discover_anthem(n: int) -> list:
+    from datetime import date
+
+    import ijson
+    stamp = date.today().strftime("%Y-%m-01")
+    url = ANTHEM_INDEX_FMT.format(stamp=stamp)
+    log("  anthem: streaming ~10GB gzip index via curl|gunzip (bounded early-stop)")
+    # urllib resets on this S3 endpoint; curl is reliable. Stream + decompress, stop early.
+    proc = subprocess.Popen(["bash", "-c", f"curl -s --max-time 1800 '{url}' | gunzip -c"],
+                            stdout=subprocess.PIPE)
+    locs: list = []
+    try:
+        for f in ijson.items(proc.stdout, "reporting_structure.item.in_network_files.item"):
+            loc = f.get("location") if isinstance(f, dict) else None
+            if loc and "in-network-rates" in loc.lower():
+                locs.append(loc)
+                if len(locs) >= 250:
+                    break
+    finally:
+        try:
+            proc.stdout.close()
+        except Exception:
+            pass
+        proc.terminate()
+        try:
+            proc.wait(timeout=5)
+        except Exception:
+            proc.kill()
+    log(f"  anthem: {len(locs)} in-network locations; sizing")
+    # Floor at 25MB: Anthem's tiny shards carry a few codes and no therapy.
+    return _pick_smallest(locs, n, cap=130_000_000, head_budget=180, lo=25_000_000)
+
+
+PAYERS = {"uhc": discover_uhc, "centene": discover_centene,
+          "cigna": discover_cigna, "anthem": discover_anthem}
 
 
 def download_and_filter(url: str, payer: str, idx: int) -> str | None:
     raw = os.path.join(POOL_DIR, f"{payer}_{idx}.dat")
     out = os.path.join(POOL_DIR, f"{payer}_{idx}.jsonl")
     try:
-        urllib.request.urlretrieve(url, raw)
+        subprocess.run(["curl", "-sL", "--max-time", "900", "-o", raw, url],
+                       check=True, timeout=960)
         # name by magic bytes so the filter opens gz vs plain correctly
         with open(raw, "rb") as fh:
             magic = fh.read(2)
@@ -258,6 +304,22 @@ def main() -> int:
     ds["meta"]["plan_sample"] = per_payer_ok
     ds["meta"]["payers"] = sorted(per_payer_ok)
     blend.geo_adjust_dataset(ds)
+
+    # Per-payer breakout: re-aggregate each payer alone so consumers see the spread
+    # the n-weighted blend hides (e.g. Cigna pays most, Centene/ACA least).
+    by_payer: dict = {}
+    for payer in per_payer_ok:
+        for r in aggregate.aggregate_files(
+                sorted(glob.glob(os.path.join(POOL_DIR, f"{payer}_*.jsonl")))):
+            if r.get("amount_kind") == "negotiated":
+                by_payer.setdefault(r["cpt_code"], {})[payer] = {
+                    "n_obs": r["n_obs"], "p25": r["p25"], "median": r["p50"], "p75": r["p75"]}
+    for c in ds["codes"]:
+        c["by_payer"] = by_payer.get(c["cpt_code"], {})
+    ds["meta"]["by_payer_note"] = (
+        "Per-payer national medians (negotiated in-network). The top-level estimate is "
+        "the n-weighted blend; by_payer shows the spread the blend hides.")
+
     json.dump(ds, open(jp, "w"), indent=2)
     _patch_locality_csv(lp, ds)
 

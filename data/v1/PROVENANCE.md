@@ -1,15 +1,17 @@
 # v1 dataset provenance
 
 - **Snapshot:** payer Transparency-in-Coverage files dated 2026-06-01.
-- **Multi-payer:** pooled across **3 payers** (`payer_scope = multi`): UHC (200 plan
-  files), Centene (19 Ambetter/HealthNet/etc. files), Cigna (3 large national files) —
-  222 files total. Each streamed through `v1_tic/filter_mrf.py` (ijson), pooled,
-  aggregated per (code, payer) with MIN_N>=10, then the merge blends payers by an
-  n-weighted mean into one national ratio per code. Reproduce with
-  `python3 -m oon_bench.build_real uhc=200 centene=40 cigna=15`. (Cigna caps at ~3
-  files because its non-national plans are still >150MB; UHC dominates by file volume.)
-- **Observation counts:** n ~90,000 for the common individual/family/group codes;
-  ~38,000-46,000 for the testing block; ~4,000 for the rarer 96127 / 90845.
+- **Multi-payer:** pooled across **4 payers** (`payer_scope = multi`): UHC (150 files),
+  Centene (19), Anthem/Elevance (12), Cigna (3) — 184 files. Each streamed through
+  `v1_tic/filter_mrf.py` (ijson), pooled, aggregated per (code, payer) with MIN_N>=10,
+  then the merge blends payers by an n-weighted mean into one national ratio per code.
+  Reproduce with `python3 -m oon_bench.build_real uhc=150 centene=40 cigna=15 anthem=12`.
+- **Per-payer breakout (`by_payer` on each code):** the blended median hides real payer
+  spread, so each code also carries per-payer medians. Pattern: **Cigna pays the most,
+  Centene (ACA marketplace) the least** — e.g. 90837 runs UHC $130 / Cigna $164 /
+  Centene $125 / Anthem $130 (~30% spread). Top-level estimate = n-weighted blend.
+- **Observation counts:** n ~67,000-85,000 for the common individual/family/group codes;
+  ~34,000-47,000 for the testing block; ~4,000-12,500 for the rarer 96127 / 90845.
 - **Converged:** the medians are stable across builds — 40 UHC plans, 230 UHC plans,
   and 222 multi-payer plans all put 90837 within ~$130-137 and 90791 within ~$145-151.
   Adding files/payers no longer moves the estimate, which is the signal that this slice

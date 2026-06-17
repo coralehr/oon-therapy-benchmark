@@ -1,20 +1,20 @@
 cpt_code,service_label,medicare_status,state,locality_name,medicare_nonfacility_usd,snapshot_date,methodology_version,basis,oon_low_usd,oon_high_usd,oon_mid_usd,oon_p90_usd,oon_obs_n,payer_scope
-90791,Diagnostic intake / first evaluation,A,US,US,173.35,2026-06-07,v1-tic-2026A,tic_innetwork_proxy,121.35,191.7,150.24,250.88,90305,multi
-90792,Diagnostic intake with medical services (prescriber),A,US,US,202.08,2026-06-07,v1-tic-2026A,tic_innetwork_proxy,130.38,207.11,165.27,265.35,85720,multi
-90832,"Individual therapy, 30 minutes",A,US,US,85.84,2026-06-07,v1-tic-2026A,tic_innetwork_proxy,55.87,84.55,67.99,115.07,90537,multi
-90834,"Individual therapy, 45 minutes",A,US,US,113.9,2026-06-07,v1-tic-2026A,tic_innetwork_proxy,82.53,123.92,99.92,169.89,91902,multi
-90837,"Individual therapy, 60 minutes",A,US,US,167.0,2026-06-07,v1-tic-2026A,tic_innetwork_proxy,109.82,163.65,130.28,220.71,90962,multi
-90846,"Family therapy without the client present, 50 minutes",R,US,US,105.88,2026-06-07,v1-tic-2026A,tic_innetwork_proxy,88.29,126.2,103.34,167.33,89776,multi
-90847,"Family therapy with the client present, 50 minutes",A,US,US,109.55,2026-06-07,v1-tic-2026A,tic_innetwork_proxy,91.87,133.63,108.53,180.04,90392,multi
-90853,Group therapy session,A,US,US,30.39,2026-06-07,v1-tic-2026A,tic_innetwork_proxy,39.82,49.88,41.07,66.55,90327,multi
-90839,"Crisis therapy, first 60 minutes",A,US,US,160.32,2026-06-07,v1-tic-2026A,tic_innetwork_proxy,101.04,158.67,129.96,211.65,87899,multi
-90840,"Crisis therapy, each additional 30 minutes",A,US,US,77.16,2026-06-07,v1-tic-2026A,tic_innetwork_proxy,6.6,72.44,52.9,91.46,83298,multi
-96127,Brief emotional/behavioral check (per standardized measure),A,US,US,5.01,2026-06-07,v1-tic-2026A,tic_innetwork_proxy,4.79,7.59,5.61,14.61,4023,multi
-96130,"Psychological testing evaluation by clinician, first hour",A,US,US,123.92,2026-06-07,v1-tic-2026A,tic_innetwork_proxy,116.07,156.77,131.48,213.59,38339,multi
-96131,"Psychological testing evaluation, each additional hour",A,US,US,86.51,2026-06-07,v1-tic-2026A,tic_innetwork_proxy,86.79,118.34,99.46,164.46,38151,multi
-96132,"Neuropsychological testing evaluation by clinician, first hour",A,US,US,122.25,2026-06-07,v1-tic-2026A,tic_innetwork_proxy,130.32,174.18,150.12,238.82,45573,multi
-96133,"Neuropsychological testing evaluation, each additional hour",A,US,US,97.86,2026-06-07,v1-tic-2026A,tic_innetwork_proxy,99.79,133.91,114.53,183.78,45620,multi
-96136,"Test administration and scoring by clinician, first 30 minutes",A,US,US,43.76,2026-06-07,v1-tic-2026A,tic_innetwork_proxy,45.09,61.98,53.66,86.31,45845,multi
-96137,"Test administration and scoring, each additional 30 minutes",A,US,US,37.07,2026-06-07,v1-tic-2026A,tic_innetwork_proxy,41.12,57.55,49.57,79.32,45935,multi
-90785,Interactive complexity add-on (complicating communication factors),A,US,US,14.7,2026-06-07,v1-tic-2026A,tic_innetwork_proxy,5.32,15.05,9.6,18.02,91508,multi
-90845,Psychoanalysis session,A,US,US,109.22,2026-06-07,v1-tic-2026A,tic_innetwork_proxy,88.09,131.93,102.81,189.83,4237,multi
+90791,Diagnostic intake / first evaluation,A,US,US,173.35,2026-06-07,v1-tic-2026A,tic_innetwork_proxy,123.46,183.13,148.52,243.16,82811,multi
+90792,Diagnostic intake with medical services (prescriber),A,US,US,202.08,2026-06-07,v1-tic-2026A,tic_innetwork_proxy,131.07,199.89,162.97,273.51,72864,multi
+90832,"Individual therapy, 30 minutes",A,US,US,85.84,2026-06-07,v1-tic-2026A,tic_innetwork_proxy,56.79,85.6,68.98,115.48,68632,multi
+90834,"Individual therapy, 45 minutes",A,US,US,113.9,2026-06-07,v1-tic-2026A,tic_innetwork_proxy,83.02,119.95,98.81,162.66,79257,multi
+90837,"Individual therapy, 60 minutes",A,US,US,167.0,2026-06-07,v1-tic-2026A,tic_innetwork_proxy,113.58,158.02,130.23,204.54,85432,multi
+90846,"Family therapy without the client present, 50 minutes",R,US,US,105.88,2026-06-07,v1-tic-2026A,tic_innetwork_proxy,88.51,123.79,102.27,163.08,78195,multi
+90847,"Family therapy with the client present, 50 minutes",A,US,US,109.55,2026-06-07,v1-tic-2026A,tic_innetwork_proxy,92.04,130.88,107.79,171.81,78641,multi
+90853,Group therapy session,A,US,US,30.39,2026-06-07,v1-tic-2026A,tic_innetwork_proxy,39.98,50.2,41.37,67.0,66906,multi
+90839,"Crisis therapy, first 60 minutes",A,US,US,160.32,2026-06-07,v1-tic-2026A,tic_innetwork_proxy,106.36,154.18,130.12,198.03,82083,multi
+90840,"Crisis therapy, each additional 30 minutes",A,US,US,77.16,2026-06-07,v1-tic-2026A,tic_innetwork_proxy,9.49,74.19,56.13,94.3,60734,multi
+96127,Brief emotional/behavioral check (per standardized measure),A,US,US,5.01,2026-06-07,v1-tic-2026A,tic_innetwork_proxy,4.77,7.38,5.62,12.75,4025,multi
+96130,"Psychological testing evaluation by clinician, first hour",A,US,US,123.92,2026-06-07,v1-tic-2026A,tic_innetwork_proxy,111.27,147.72,125.22,191.07,42517,multi
+96131,"Psychological testing evaluation, each additional hour",A,US,US,86.51,2026-06-07,v1-tic-2026A,tic_innetwork_proxy,86.12,113.66,97.36,154.29,36917,multi
+96132,"Neuropsychological testing evaluation by clinician, first hour",A,US,US,122.25,2026-06-07,v1-tic-2026A,tic_innetwork_proxy,121.65,162.36,140.76,210.94,47230,multi
+96133,"Neuropsychological testing evaluation, each additional hour",A,US,US,97.86,2026-06-07,v1-tic-2026A,tic_innetwork_proxy,98.13,128.49,110.59,171.9,42586,multi
+96136,"Test administration and scoring by clinician, first 30 minutes",A,US,US,43.76,2026-06-07,v1-tic-2026A,tic_innetwork_proxy,44.96,62.6,53.53,86.89,34410,multi
+96137,"Test administration and scoring, each additional 30 minutes",A,US,US,37.07,2026-06-07,v1-tic-2026A,tic_innetwork_proxy,41.06,58.03,49.46,80.09,34428,multi
+90785,Interactive complexity add-on (complicating communication factors),A,US,US,14.7,2026-06-07,v1-tic-2026A,tic_innetwork_proxy,5.43,15.13,9.93,18.07,66994,multi
+90845,Psychoanalysis session,A,US,US,109.22,2026-06-07,v1-tic-2026A,tic_innetwork_proxy,87.8,110.02,94.88,145.49,12540,multi
