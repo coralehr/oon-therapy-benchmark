@@ -95,9 +95,22 @@ remaining operational step.
 - **~145 v1 tests** (schemas/aggregate/merge/query/api/end-to-end), bringing the repo
   suite to ~287 passing.
 
+### Real data landed (national sample)
+
+- **`data/v1/`** now contains a REAL `tic_innetwork_proxy` dataset: 40 real UHC
+  in-network plan files (2026-06-01 snapshot) pooled and merged over the v0 Medicare
+  baseline. All 19 codes cleared MIN_N (n=148-180). Example: 90837 (60-min therapy)
+  proxy median $137 vs Medicare $167. The FastAPI service serves these by default.
+  See `data/v1/PROVENANCE.md`.
+- Confirmed the filter handles the real UHC in-network schema; confirmed payer
+  out-of-network *allowed-amount* files are effectively empty (UHC largest 17 KB), so
+  in-network negotiated rates are the proxy.
+
 ### Planned
 
-- The operational real-payer run against UHC/Aetna/Cigna MRFs to produce `data/v1/`.
-- `provider_tin` emission from the filter (provider-reference resolution) so dedupe
-  is effective on real data; currently conservative (keeps all untinned rows).
+- **Per-state resolution:** provider-reference -> NPI -> state (NPPES) so by-locality
+  rows carry real proxy numbers instead of national-only. This is the next real lever
+  (and what makes a full-scale fire-and-forget run worthwhile).
+- Broaden beyond a 40-plan UHC sample (more plans, more payers); Aetna index is
+  SPA-gated and needs browser-based discovery.
 - ZIP→locality mapping via CMS `26LOCCO`.
