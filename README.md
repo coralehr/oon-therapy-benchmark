@@ -107,6 +107,7 @@ To run against real payers (the terabyte-scale operational step), see
 
 ## Documentation
 
+- **[FINDINGS.md](FINDINGS.md) — what insurers actually pay for therapy (cross-payer).**
 - [oon_bench/README.md](oon_bench/README.md) — the backend: library, CLI, HTTP API.
 - [METHODOLOGY.md](METHODOLOGY.md) — the v0 formula, sources, and placeholder band.
 - [docs/DATA_DICTIONARY.md](docs/DATA_DICTIONARY.md) — every column and JSON field.
