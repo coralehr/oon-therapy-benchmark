@@ -142,7 +142,7 @@ class RateStore:
         elif isinstance(sources, str) and sources.strip():
             self._source = sources.strip()
         else:
-            self._source = self.methodology_version or "oon-therapy-benchmark"
+            self._source = self.methodology_version or "therapy-reimbursement-benchmark"
         self._disclaimer: str = str(meta.get("disclaimer") or DEFAULT_DISCLAIMER)
 
         self._codes: dict[str, dict] = {}

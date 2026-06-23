@@ -47,7 +47,7 @@ documented `1.0–2.0` placeholder multiplier) scaled by your coinsurance.
 
 Because the page fetches a JSON file, browsers block it when you open the HTML
 directly from disk (`file://`). Serve the repo over a tiny local web server
-instead. From the **repo root** (`oon-therapy-benchmark/`):
+instead. From the **repo root** (`therapy-reimbursement-benchmark/`):
 
 ```bash
 # Python 3 (no install needed)

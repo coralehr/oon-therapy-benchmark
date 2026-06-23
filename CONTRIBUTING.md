@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for helping improve the Therapy Out-of-Network Reimbursement Benchmark.
+Thanks for helping improve the Therapy Reimbursement Benchmark.
 This is a small, deliberately narrow dataset: public CMS data, transparent
 formula, one vertical (outpatient therapy). Contributions should keep it that
 way — credible, reproducible, and honest about what it is.
