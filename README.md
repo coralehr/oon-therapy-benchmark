@@ -1,17 +1,19 @@
-# Therapy Out-of-Network Reimbursement Benchmark
+# Therapy Reimbursement Benchmark
 
-An open-source **backend** for typical out-of-network reimbursement amounts for
-outpatient **therapy** CPT codes, by geography. Built from public data, shows its
-work, scoped to one vertical on purpose.
+An open-source dataset and read-only API for typical reimbursement amounts for
+outpatient **therapy** CPT codes, by payer and geography. Built from public CMS
+and Transparency-in-Coverage files, it shows its work and stays deliberately
+scoped to one clinical vertical.
 
-Most out-of-network estimators are black boxes that emit a number and ask you to
+Most reimbursement estimators are black boxes that emit a number and ask you to
 trust it. This one is transparent: every figure carries a `basis`, an observation
-count, and a source, and traces back to a public file and a documented formula.
+count, and a source, and traces back to a public file and a documented method.
 
-The product is the backend (a Python library + CLI + read-only HTTP API), not a UI.
-A demo calculator lives in `examples/` but is not the deliverable.
+The repo serves practical reference files for clinicians and builders: committed
+CSV/JSON snapshots, a Python library, a CLI, and a read-only HTTP API. A demo
+calculator lives in `examples/` as a reference consumer of the same data.
 
-## The backend (`oon_bench`)
+## Query the dataset (`oon_bench`)
 
 ```bash
 pip install -e ".[api]"                      # editable install + API deps
@@ -35,7 +37,7 @@ v1 Transparency-in-Coverage numbers once a TiC build has produced `data/v1/`.
 Pipeline + surfaces are documented in [oon_bench/README.md](oon_bench/README.md) and
 [v1_tic/README.md](v1_tic/README.md).
 
-## The dataset (what the backend serves)
+## The dataset (what the API serves)
 
 `data/therapy_oon_benchmark_v0_national.csv` — one row per therapy code, national.
 `data/therapy_oon_benchmark_v0_by_locality.csv` — code x CMS locality (~109 localities).
@@ -50,7 +52,7 @@ the interactive-complexity add-on (90785). That gives 19 codes × 109 CMS locali
 
 ### v0 national snapshot (2026, non-facility / office)
 
-| CPT | Service | Medicare | OON range* |
+| CPT | Service | Medicare | v0 range* |
 |-----|---------|---------:|-----------:|
 | 90791 | Diagnostic intake | $173.35 | $173–$347 |
 | 90834 | Individual therapy, 45 min | $113.90 | $114–$228 |
@@ -59,24 +61,23 @@ the interactive-complexity add-on (90785). That gives 19 codes × 109 CMS locali
 | 90853 | Group therapy | $30.39 | $30–$61 |
 | 96132 | Neuropsych testing eval, 1st hr | $122.25 | $122–$245 |
 
-\* v0 OON range is Medicare x a documented placeholder band (1.0–2.0x). It is an
-assumption, not a measurement. **v1 replaces it with real numbers** (see Roadmap).
+\* The v0 range is Medicare x a documented placeholder band (1.0–2.0x). It is an
+assumption, not a measurement. **v1 replaces it with payer-published rates** (see Roadmap).
 
 ## How it works
 
 ```
 Medicare allowed (non-facility) = (workRVU·workGPCI + peRVU·peGPCI + mpRVU·mpGPCI) × CF
-OON estimate range              = Medicare × [oon_mult_low, oon_mult_high]
+v0 estimate range               = Medicare × [oon_mult_low, oon_mult_high]
 ```
 
 CF (2026 conversion factor) = `33.4009`, read from the CMS file. Full detail in
 [METHODOLOGY.md](METHODOLOGY.md).
 
-## Example consumer (a calculator, not the product)
+## Example consumer: browser calculator
 
-A self-contained demo calculator lives in `examples/calculator/`. It is a reference
-consumer of the dataset, not the open-source deliverable (the backend is). It reads
-the v0 JSON and shows an honest reimbursement range with a "show your work" panel:
+A self-contained demo calculator lives in `examples/calculator/`. It reads the v0
+JSON and shows an honest reimbursement range with a "show your work" panel:
 
 ```bash
 python3 -m http.server 8000        # from the repo root
@@ -134,7 +135,7 @@ filter rejects ~99.99% of each payer file, so terabytes collapse to a few MB.
 
 ## What this is and isn't
 
-- This is the **commodity** layer: public data, free, transparent. Take it, use it.
+- This is the public reference layer: public data, free, transparent. Take it, use it.
 - It is **not** anyone's real claims data. Actual paid-reimbursement data stays
   with the systems that process the claims.
 - It is **not** medical, billing, or legal advice. Estimates only, not guarantees.

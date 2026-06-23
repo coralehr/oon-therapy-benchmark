@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "oon-bench"
 version = "0.1.0"
-description = "Open-source backend for therapy out-of-network reimbursement benchmarks: CMS Medicare anchor (v0) + Transparency-in-Coverage enrichment (v1)."
+description = "Open-source therapy reimbursement benchmark: CMS Medicare anchor (v0) + Transparency-in-Coverage payer rates (v1)."
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }

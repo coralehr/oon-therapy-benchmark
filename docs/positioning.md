@@ -2,13 +2,14 @@
 
 ## The one-line strategy
 
-Open-source the commodity, keep the flywheel. The commodity is public data that
-anyone can rebuild from CMS and payer transparency files. The flywheel is the private
-loop a real EHR sits on: actual claims, ERAs, and paid-reimbursement records that
-only flow through the systems processing those claims. We give away the first and
-compound the second.
+Serve the public reimbursement reference layer openly, while keeping clinic-specific
+claims history private. The public layer is data anyone can rebuild from CMS and
+payer transparency files. The private layer is a real clinic's claims, ERAs, and
+paid-reimbursement records. Clinicians benefit from the first as a transparent
+benchmark, and the second stays where it belongs: inside the systems processing a
+practice's own claims.
 
-## What is the commodity, and why give it away
+## What is the public reference layer, and why publish it
 
 Medicare RVUs, GPCIs, the conversion factor, and payer Transparency-in-Coverage
 files are public. CMS data is a U.S. Government work in the public domain. The
@@ -21,10 +22,11 @@ So the value here is not the raw numbers. It is the selection, the labeling, the
 narrow therapy filter, and the documented method that makes the numbers trustworthy
 and usable. That work is genuinely useful to clinicians and patients, it costs little
 to maintain at this scope, and it earns trust precisely because it is open and shows
-its work. Giving it away is the correct move. It builds authority, it earns links,
-and it makes us the reference that other people cite.
+its work. Publishing it is the correct move because clinicians should be able to
+inspect the assumptions behind a reimbursement estimate instead of trusting an
+opaque calculator.
 
-## What is the flywheel, and why keep it
+## What stays private, and why
 
 The thing that is actually scarce is a clinic's real reimbursement history: what each
 payer actually paid on each claim, after adjudication, for that clinic's specific
@@ -35,10 +37,10 @@ accumulates it over time. The public benchmark tells you what a code is roughly 
 in your region. A clinic's own claims data tells you what that clinic actually
 collects, which is the number that pays the rent.
 
-That private data is the moat. It improves with every claim processed, it cannot be
-scraped, and it is exactly the input that turns a generic benchmark into a
-clinic-specific revenue model. We open-source the generic layer and let the private
-layer compound where it already lives, inside the EHR.
+That private data should not be published or mixed into this repo. It improves with
+every claim processed, but it is specific to one practice and can include sensitive
+administrative context. This project open-sources the generic reference layer and
+keeps practice-specific reimbursement history inside the EHR.
 
 ## Why therapy only
 
@@ -71,28 +73,23 @@ Periodic-and-narrow is the only shape of this project that survives. It sets an
 honest expectation, it keeps the maintenance load inside what a small team can carry,
 and it avoids the treadmill that turned earlier attempts into abandonware.
 
-## How this fits the EHR: tool-first SEO
+## How this fits clinician workflows
 
-This dataset and the calculator built on top of it are a top-of-funnel,
-tool-first-SEO asset for the EHR. The two pieces play distinct roles.
+This dataset and the calculator built on top of it serve two practical clinician
+needs.
 
-The dataset is the authority and backlink asset. It is open, sourced, and rebuildable
-from public files, which is exactly the kind of artifact that other sites cite and
-link to. Citations and links are what earn ranking and credibility over time. The
-dataset's job is to make this the reference that practice-management blogs, billing
-forums, and clinician communities point at.
+The dataset is the inspectable reference. It is open, sourced, and rebuildable from
+public files, so a clinician, biller, or developer can see where a number came from
+and decide whether it is useful for their situation.
 
-The calculator is the conversion surface. A clinician or a patient arrives with a
-concrete question, what does code 90837 reimburse out-of-network in my area, and the
-calculator answers it on the spot. That is the moment the visitor experiences the
-product's competence first-hand, before any signup. The calculator turns search
-traffic into engaged users, and engaged users are the top of the funnel into the EHR
-itself.
+The calculator is the usable surface. A clinician can ask a concrete question, such
+as what code 90837 typically reimburses in a state or payer sample, and get an answer
+with the method visible nearby. The tool should help with context-setting, fee review,
+and reimbursement conversations without pretending to know a specific patient's plan.
 
-Together: the dataset earns the authority that brings people in, and the calculator
-turns that attention into a first useful interaction with the product. Both run on
-the open commodity layer. The conversion downstream, into a clinic running its claims
-through the EHR, is where the private flywheel starts.
+Together: the dataset provides the source-backed files, and the calculator makes the
+same files usable at the point of need. If a clinic wants its own paid-claims history,
+that belongs in its private billing workflow, not in this public benchmark.
 
 ## The honest caveat
 
